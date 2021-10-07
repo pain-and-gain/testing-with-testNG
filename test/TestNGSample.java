@@ -13,6 +13,7 @@ import static org.testng.AssertJUnit.*;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 /**
@@ -44,6 +45,17 @@ public class TestNGSample {
     public void tearDown() throws Exception {
         detail.removeAllItemInPayemt();
         item.removeAll(item);
+    }
+    
+    @DataProvider(name="payments")
+    public static ArrayList<PaymentDetailDTO> paymentList() {
+        ArrayList<PaymentDetailDTO> payments = new ArrayList<>();
+        payments.add(null);
+        payments.add(new PaymentDetailDTO(4, null, null));
+        payments.add(new PaymentDetailDTO(2, "furnitures", null));
+        payments.add(new PaymentDetailDTO(-1, "phones", item));
+        payments.add(new PaymentDetailDTO());
+        return payments;
     }
 
     @Test(enabled=true)
