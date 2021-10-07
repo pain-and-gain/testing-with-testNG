@@ -64,6 +64,14 @@ public class TestNGSample {
         detail.addPaymentToList(new PaymentDetailDTO(1, "the 2nd list with duplicate ID", item));
     }
     
-   //addNewPayMentWithNullPaymentTitle
-    //do the same with ItemDTO
+    @Test(expectedExceptions = IllegalAccessException.class)
+    public void addNewPayMentWithNullPaymentTitle(){
+        detail.addPaymentToList(new PaymentDetailDTO(5,null, item));
+        detail.addPaymentToList(new PaymentDetailDTO(3,null, item));
+}
+    @Test(expectedExceptions = IllegalAccessException.class)
+    public void addNullItem(){
+        item.add(new ItemDTO(null, 6, 300));
+        item.add(new ItemDTO(null, 7, 100));
+}  
 }
