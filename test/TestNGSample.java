@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import static org.testng.AssertJUnit.*;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -41,42 +42,51 @@ public class TestNGSample {
         item.add(new ItemDTO("samsung", 3, 200));
     }
 
-    @AfterClass
+    @AfterMethod
     public void tearDown() throws Exception {
         detail.removeAllItemInPayemt();
         item.removeAll(item);
     }
 
     @DataProvider(name = "payments")
-    public static ArrayList<PaymentDetailDTO> paymentList() {
-        ArrayList<PaymentDetailDTO> payments = new ArrayList<>();
-        payments.add(null);
-        payments.add(new PaymentDetailDTO(4, null, null));
-        payments.add(new PaymentDetailDTO(2, "furnitures", null));
-        payments.add(new PaymentDetailDTO(-1, "phones", item));
-        payments.add(new PaymentDetailDTO());
-        return payments;
+    public static Object[][] paymentList() {
+        return new Object[][]{
+            {new PaymentDetailDTO(1, "1st item", item), true},
+            {new PaymentDetailDTO(2, "2nd item", item), false},
+            {new PaymentDetailDTO(3, "3rd item", item), false}
+        };
+    }
+ 
+    @Test(enabled = true,
+            dataProvider = "payments")
+    public void addNewValidPayment(PaymentDetailDTO payments, boolean expected) {
+        assertEquals(expected, detail.addPaymentToList(payments));
     }
 
-    @Test(enabled = true)
-    public void addNewValidPayment() {
-        boolean expected = true;
-        boolean result = detail.addPaymentToList(new PaymentDetailDTO(1, "phoneItem", item));
-        assertEquals(expected, result);
+    @Test(enabled = false,
+            dataProvider = "payments",
+            timeOut = 200)
+    public void addNewPaymentButTimeOut(PaymentDetailDTO payments, boolean expected) throws InterruptedException {
+        Thread.sleep(300);
+        assertEquals(expected, detail.addPaymentToList(payments));
     }
 
-    @Test(expectedExceptions = NullPointerException.class, enabled = true)
+    @Test(enabled = true,
+            expectedExceptions = NullPointerException.class)
     public void addNewPaymentWithNullItemList() {
         detail.addPaymentToList(new PaymentDetailDTO(1, "null item list", null));
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class, enabled = true)
+    @Test(enabled = true,
+            expectedExceptions = IllegalArgumentException.class)
     public void addNewPaymentWithDuplicateID() {
         detail.addPaymentToList(new PaymentDetailDTO(1, "the 1st list", item));
         detail.addPaymentToList(new PaymentDetailDTO(1, "the 2nd list with duplicate ID", item));
     }
 
-    @Test(expectedExceptions = NullPointerException.class, enabled = true, dependsOnMethods = {"addNewPaymentWithDuplicateID"})
+    @Test(enabled = true,
+             expectedExceptions = NullPointerException.class
+    /*, dependsOnMethods = {"addNewPaymentWithDuplicateID"}*/)
     public void addNewPayMentWithNullPaymentTitle() {
         detail.addPaymentToList(new PaymentDetailDTO(5, null, item));
         detail.addPaymentToList(new PaymentDetailDTO(3, null, item));
