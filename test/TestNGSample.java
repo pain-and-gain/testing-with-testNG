@@ -46,8 +46,8 @@ public class TestNGSample {
         detail.removeAllItemInPayemt();
         item.removeAll(item);
     }
-    
-    @DataProvider(name="payments")
+
+    @DataProvider(name = "payments")
     public static ArrayList<PaymentDetailDTO> paymentList() {
         ArrayList<PaymentDetailDTO> payments = new ArrayList<>();
         payments.add(null);
@@ -58,33 +58,27 @@ public class TestNGSample {
         return payments;
     }
 
-    @Test(enabled=true)
+    @Test(enabled = true)
     public void addNewValidPayment() {
         boolean expected = true;
         boolean result = detail.addPaymentToList(new PaymentDetailDTO(1, "phoneItem", item));
         assertEquals(expected, result);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class,enabled=true)
+    @Test(expectedExceptions = NullPointerException.class, enabled = true)
     public void addNewPaymentWithNullItemList() {
         detail.addPaymentToList(new PaymentDetailDTO(1, "null item list", null));
     }
 
-    @Test(expectedExceptions = IllegalAccessException.class,enabled=true)
+    @Test(expectedExceptions = IllegalArgumentException.class, enabled = true)
     public void addNewPaymentWithDuplicateID() {
         detail.addPaymentToList(new PaymentDetailDTO(1, "the 1st list", item));
         detail.addPaymentToList(new PaymentDetailDTO(1, "the 2nd list with duplicate ID", item));
     }
-    
-    @Test(expectedExceptions = IllegalAccessException.class,enabled=true,dependsOnMethods={"addNewPaymentWithDuplicateID"})
-    public void addNewPayMentWithNullPaymentTitle(){
-        detail.addPaymentToList(new PaymentDetailDTO(5,null, item));
-        detail.addPaymentToList(new PaymentDetailDTO(3,null, item));
-}
-    
-    @Test(expectedExceptions = IllegalAccessException.class,enabled=true)
-    public void addNullItem(){
-        item.add(new ItemDTO(null, 6, 300));
-        item.add(new ItemDTO(null, 7, 100));
-}  
+
+    @Test(expectedExceptions = NullPointerException.class, enabled = true, dependsOnMethods = {"addNewPaymentWithDuplicateID"})
+    public void addNewPayMentWithNullPaymentTitle() {
+        detail.addPaymentToList(new PaymentDetailDTO(5, null, item));
+        detail.addPaymentToList(new PaymentDetailDTO(3, null, item));
+    }
 }

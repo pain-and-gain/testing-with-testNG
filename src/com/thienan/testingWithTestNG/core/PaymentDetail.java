@@ -36,23 +36,23 @@ public class PaymentDetail {
     }
 
     public boolean isExisted(int paymentID) {
-        /*
+        
         if(paymentID < 0){
             throw new IllegalArgumentException("Payment ID must be greater than 0");
         }
-         */
+        
         return this.paymentList.stream().anyMatch((paymentDetail) -> (paymentDetail.getPaymentID() == paymentID));
     }
 
     public boolean addPaymentToList(PaymentDetailDTO payment) {
-        /*
-        if (payment == null) {
-            throw new NullPointerException("The paramenter can not be null");
+        
+        if (payment.getPaymentTitle() == null || payment.getItemList().isEmpty() || payment.getItemList() == null) {
+            throw new NullPointerException("The field can not be null");
         }
         if(isExisted(payment.getPaymentID())){
             throw new IllegalArgumentException("This payment with ID is already exist");
         }
-         */
+        
         this.paymentList.add(payment);
         return true;
     }
